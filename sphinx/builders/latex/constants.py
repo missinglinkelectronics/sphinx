@@ -100,6 +100,7 @@ DEFAULT_SETTINGS: dict[str, Any] = {
                         '\\usepackage{hypcap}% it must be loaded after hyperref.\n'
                         '% Set up styles of URL: it should be placed after hyperref.\n'
                         '\\urlstyle{same}'),
+    'glossaries':      '\\usepackage[acronym,toc]{glossaries}',
     'contentsname':    '',
     'extrapackages':   '',
     'preamble':        '',
@@ -108,11 +109,13 @@ DEFAULT_SETTINGS: dict[str, Any] = {
     'author':          '',
     'releasename':     '',
     'makeindex':       '\\makeindex',
+    'makeglossaries':  '\\makeglossaries',
     'shorthandoff':    '',
     'maketitle':       '\\sphinxmaketitle',
     'tableofcontents': '\\sphinxtableofcontents',
     'atendofbody':     '',
     'printindex':      '\\printindex',
+    'printacronyms':   '\\printacronyms',
     'transition':      '\n\n\\bigskip\\hrule\\bigskip\n\n',
     'figure_align':    'htbp',
     'tocdepth':        '',

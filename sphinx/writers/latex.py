@@ -322,6 +322,7 @@ class LaTeXTranslator(SphinxTranslator):
     ) -> None:
         super().__init__(document, builder)
         self.body: list[str] = []
+        self.abbreviations = {}  # type: Dict[unicode, unicode]
         self.theme = theme
 
         # flags
@@ -471,7 +472,7 @@ class LaTeXTranslator(SphinxTranslator):
         self.footnote_restricted: Element | None = None
         self.pending_footnotes: list[nodes.footnote_reference] = []
         self.curfilestack: list[str] = []
-        self.handled_abbrs: set[str] = set()
+        # self.handled_abbrs: set[str] = set()
 
     def pushbody(self, newbody: list[str]) -> None:
         self.bodystack.append(self.body)
@@ -486,6 +487,7 @@ class LaTeXTranslator(SphinxTranslator):
         self.elements.update({
             'body': ''.join(self.body),
             'indices': self.generate_indices(),
+            'abbreviations': self.generate_abbreviations()
         })
         return self.render('latex.tex.jinja', self.elements)
 
@@ -579,6 +581,14 @@ class LaTeXTranslator(SphinxTranslator):
                         generate(content, collapsed)
 
         return ''.join(ret)
+
+    def generate_abbreviations(self) -> unicode:
+        gen_abbrs = ''
+        for abbr, explanation in self.abbreviations.items():
+            gen_abbrs += '\\newacronym{%s}{%s}{%s}\n' % (
+                    abbr, abbr, self.encode(explanation)
+            )
+        return gen_abbrs
 
     def render(self, template_name: str, variables: dict[str, Any]) -> str:
         renderer = LaTeXRenderer(latex_engine=self.config.latex_engine)
@@ -2068,13 +2078,18 @@ class LaTeXTranslator(SphinxTranslator):
 
     def visit_abbreviation(self, node: Element) -> None:
         abbr = node.astext()
-        self.body.append(r'\sphinxstyleabbreviation{')
+        # self.body.append(r'\sphinxstyleabbreviation{')
         # spell out the explanation once
-        if node.hasattr('explanation') and abbr not in self.handled_abbrs:
-            self.context.append('} (%s)' % self.encode(node['explanation']))
-            self.handled_abbrs.add(abbr)
+        # if node.hasattr('explanation') and abbr not in self.handled_abbrs:
+        #     self.context.append('} (%s)' % self.encode(node['explanation']))
+        #     self.handled_abbrs.add(abbr)
+        if node.hasattr('explanation'):
+            self.body.append(r'\gls{')
+            self.abbreviations[abbr] = node['explanation']
         else:
-            self.context.append('}')
+            # self.context.append('}')
+            self.body.append('{')
+        self.context.append('}')
 
     def depart_abbreviation(self, node: Element) -> None:
         self.body.append(self.context.pop())

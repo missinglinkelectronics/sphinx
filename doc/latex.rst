@@ -493,6 +493,11 @@ Keys that don't need to be overridden unless in special cases are:
    .. versionadded:: 1.5
       Previously this was done from inside :file:`sphinx.sty`.
 
+``'glossaries'``
+     "glossaries" package inclusion, defaults to
+     ``'\\usepackage[acronym,toc]{glossaries}'``.
+     .. versionadded:: 8.1.3
+
 ``'maketitle'``
    "maketitle" call. Override if you want to generate a differently styled
    title page.
@@ -513,6 +518,12 @@ Keys that don't need to be overridden unless in special cases are:
    .. versionadded:: 1.8.3
       :code-tex:`\\sphinxbackoftitlepage` optional macro.  It can also be defined
       inside ``'preamble'`` key rather than this one.
+
+``'printacronyms'``
+    "printacronyms" call, defaults to ``'\\printacronyms'``. Override if
+    you want to print the list of acronyms differently or append some
+    content afterwards.
+    .. versionadded:: 8.1.3
 
 ``'releasename'``
    Value that prefixes ``'release'`` element on title page.  As for *title* and
